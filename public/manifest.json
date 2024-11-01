@@ -1,0 +1,22 @@
+{
+    "name": "ANIMEDAILY",
+    "short_name": "AnimeDaily",
+    "description": "Get the latest updates on your favorite anime",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "icons": [
+      {
+        "src": "assets/img/favicon.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "assets/img/favicon.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  
