@@ -54,16 +54,20 @@ const Layout = ({ children }) => {
     e.preventDefault();
     setIsLoading(true);
     setButtonText(<span className="loading loading-dots loading-xs"></span>);
-  
+
     setTimeout(() => {
       if (
         email === process.env.NEXT_PUBLIC_EMAILDEV &&
         password === process.env.NEXT_PUBLIC_PASSWORDDEV
       ) {
-        document.cookie = "isLoggedInDeveloper=true; path=/"; 
+        document.cookie = "isLoggedInDeveloper=true; path=/; max-age=3600";
+
+        document.cookie = `email=${email}; path=/; max-age=3600`;
+
         setButtonText("LOGIN");
         setIsLoading(false);
-        router.push("/dev/dashboard");
+
+        window.location.href = "/dev/dashboard";
       } else {
         setButtonText("Failed");
         setTimeout(() => {
@@ -76,10 +80,10 @@ const Layout = ({ children }) => {
 
   const handleLogout = () => {
     document.cookie = "isLoggedInDeveloper=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-    setIsLoggedInDeveloper(false);  
-    router.push('/');  
+    setIsLoggedInDeveloper(false);
+    router.push('/');
   };
-  
+
   const footerMarginClass = router.pathname === '/dev/dashboard' ? '' : 'mb-16';
 
   return (
@@ -90,7 +94,7 @@ const Layout = ({ children }) => {
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-orange">✕</button>
           </form>
           <h3 className="font-bold text-lg">LOGIN | DEV ZONE</h3>
-          <div className="flex items-center justify-center mb-6">
+          <div className="flex items-center justify-center mb-6 mt-3">
             <Image
               src="/favicon.png"
               className="w-48" alt="Logo"
