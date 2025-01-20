@@ -411,7 +411,7 @@ export default function Dashboard() {
           </form>
           <h3 className="font-bold text-lg mb-4">EDIT ANIME</h3>
           <form onSubmit={handleEditSubmit}>
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               {[{ icon: "bi-type-h1", placeholder: "TITLE", value: editAnimeDetails.title, field: "title" },
               { icon: "bi-image", placeholder: "COVER IMG", value: editAnimeDetails.coverImg, field: "coverImg" },
               { icon: "bi-type-h2", placeholder: "ALT TITLE", value: editAnimeDetails.altTitle, field: "altTitle" },
@@ -514,7 +514,7 @@ export default function Dashboard() {
           </form>
           <h3 className="font-bold text-lg mb-4">ADD ANIME</h3>
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               {[
                 { label: "TITLE", icon: "bi-type-h1", field: "title", type: "text" },
                 { label: "COVER IMG", icon: "bi-image", field: "coverImg", type: "url" },
