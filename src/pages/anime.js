@@ -279,7 +279,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
   return (
     <Layout>
       <dialog id="animes" className="modal">
-        <div className="modal-box border-orange border-2 rounded-lg w-11/12 max-w-full">
+        <div className="modal-box border-orange border-2 rounded-lg w-11/12 max-w-full p-4">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-orange">✕</button>
           </form>
