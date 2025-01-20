@@ -291,7 +291,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                   selectedAnime.infoItems?.find(item => item.startsWith("Japanese:"))?.split(":")[1]?.trim()}
               </h3>
               <div className="flex flex-col lg:flex-row gap-4">
-                <div className="flex-1 bg-base-300 p-4 rounded-lg">
+                <div className="flex-1 bg-base-300 p-3 rounded-lg">
                   <div className="relative w-full pt-[56.25%]">
                     {selectedAnime.episodes && selectedAnime.episodes.length > 0 ? (
                       <iframe
@@ -308,7 +308,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                     )}
                   </div>
                   <select
-                    className="select select-bordered w-full mt-4 rounded-lg border-none bg-base-100 text-orange"
+                    className="select select-bordered w-full mt-3 rounded-lg border-none bg-base-100 text-orange"
                     value={selectedEpisodeIndex}
                     onChange={handleEpisodeChange}
                   >
@@ -320,7 +320,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                     ))}
                   </select>
                 </div>
-                <div className="flex-1 bg-base-300 p-6 rounded-lg">
+                <div className="flex-1 bg-base-300 p-4 rounded-lg">
                   <div className="flex">
                     <div className="w-32 h-48 flex-shrink-0 relative">
                       <Image
