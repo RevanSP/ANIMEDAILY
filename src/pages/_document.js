@@ -5,6 +5,7 @@ export default function Document() {
     <Html lang="en" data-theme="black">
       <Head>
         <link rel="icon" href="/favicon.png" />
+        <link rel="manifest" href="/manifest.json" />
       </Head>
       <body className="antialiased">
         <Main />
