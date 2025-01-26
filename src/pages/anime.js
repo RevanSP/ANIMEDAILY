@@ -395,7 +395,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
             </div>
             <div className="flex items-center gap-2 mt-2">
               <select
-                className="select select-bordered border-2 border-orange bg-base-200 text-xs w-full"
+                className="select select-bordered border-2 border-orange bg-base-200 text-xs w-full uppercase"
                 value={selectedGenre}
                 onChange={handleGenreChange}
               >
