@@ -207,7 +207,7 @@ const Layout = ({ children }) => {
             <div className="py-14 hero-content text-neutral-content text-center relative">
               <div className="max-w-md">
                 <h1 className="mb-3 text-3xl font-bold text-orange">ANIMEDAILY.</h1>
-                <p className="mb-5 text-xl">
+                <p className="mb-6 text-xl">
                   The best place for the latest and most complete information about your favorite anime. Explore genres, find the latest anime lists, and enjoy an amazing viewing experience.
                 </p>
                 <div className="join">
