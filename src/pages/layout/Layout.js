@@ -84,6 +84,39 @@ const Layout = ({ children }) => {
     router.push('/');
   };
 
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        console.log(choiceResult.outcome === 'accepted' ? 'User accepted the A2HS prompt' : 'User dismissed the A2HS prompt');
+
+        setDeferredPrompt(null);
+
+        const reinstallListener = (e) => {
+          e.preventDefault();
+          setDeferredPrompt(e);
+          window.removeEventListener('beforeinstallprompt', reinstallListener);
+        };
+        window.addEventListener('beforeinstallprompt', reinstallListener);
+      });
+    }
+  };
+
   const footerMarginClass = router.pathname === '/dev/dashboard' ? '' : 'mb-16';
 
   return (
@@ -177,6 +210,17 @@ const Layout = ({ children }) => {
                 <p className="mb-5 text-xl">
                   The best place for the latest and most complete information about your favorite anime. Explore genres, find the latest anime lists, and enjoy an amazing viewing experience.
                 </p>
+                <div className="join">
+                  <button className="btn join-item bg-orange border-none hover:bg-gray-800 text-black rounded-lg" onClick={handleInstallClick}>
+                    DOWNLOAD APP NOW !
+                  </button>
+                  <button
+                    className="btn join-item border-orange border-2 bg-base-100 tooltip tooltip-left before:w-[12rem] before:content-[attr(data-tip)] rounded-lg"
+                    data-tip="Works only on certain browsers, e.g., Chrome."
+                  >
+                    <i className="bi bi-info-circle-fill text-orange"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -206,10 +250,17 @@ const Layout = ({ children }) => {
               <i className={`bi bi-bookmark${isActive('/library') ? '-fill' : ''}`}></i>
               <span className="btm-nav-label">LIBRARY</span>
             </Link>
-            <Link href="/" className={isActive('/') ? 'active text-orange' : ''}>
+            <a
+              href="#"
+              onClick={() => {
+                window.location.href = '/';
+              }}
+              className={isActive('/') ? 'active text-orange' : ''}
+            >
               <i className={`bi bi-house-door${isActive('/') ? '-fill' : ''}`}></i>
               <span className="btm-nav-label">HOME</span>
-            </Link>
+            </a>
+
             <Link href="/anime" className={isActive('/anime') ? 'active text-orange' : ''}>
               <i className={`bi bi-play-btn${isActive('/anime') ? '-fill' : ''}`}></i>
               <span className="btm-nav-label">ANIME</span>
