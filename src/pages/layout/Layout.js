@@ -38,9 +38,9 @@ const Layout = ({ children }) => {
   const isActive = (path) => router.pathname === path;
 
   const socialLinks = [
-    { icon: "bi-github", href: "", label: "Github" },
-    { icon: "bi-instagram", href: "", label: "Instagram" },
-    { icon: "bi-facebook", href: "", label: "Facebook" },
+    { icon: "bi-github", href: "https://github.com/RevanSP", label: "Github" },
+    { icon: "bi-instagram", href: "https://www.instagram.com/m9nokuro/", label: "Instagram" },
+    { icon: "bi-facebook", href: "https://web.facebook.com/profile.php?id=100082958149027&_rdc=1&_rdr", label: "Facebook" },
   ];
 
   const isHomePage = router.pathname === "/";
