@@ -4,10 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "bun next dev --turbopack",
-    "build": "bun next build",
+    "build": "bun next build && bun next-sitemap --config next-sitemap-config.js",
     "start": "bun next start",
-    "lint": "bun next lint",
-    "postbuild": "bun next-sitemap --config next-sitemap-config.js"
+    "lint": "bun next lint"
   },
   "dependencies": {
     "aos": "^2.3.4",
