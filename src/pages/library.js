@@ -1,5 +1,6 @@
 import Layout from "./layout/Layout";
 import { useState, useEffect } from "react";
+import Head from "next/head";
 
 const LibraryPage = () => {
   const [bookmarkedAnimes, setBookmarkedAnimes] = useState([]);
