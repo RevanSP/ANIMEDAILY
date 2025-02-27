@@ -1,4 +1,5 @@
 import Layout from "./layout/Layout";
+import Head from "next/head";
 
 export default function Home() {
 
@@ -37,6 +38,19 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>ANIMEDAILY</title>
+        <meta name="description" content="Your go-to platform for daily anime news, reviews, and updates." />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="ANIMEDAILY - Your Daily Anime Source" />
+        <meta property="og:description" content="Stay updated with the latest anime news, reviews, and articles at ANIMEDAILY." />
+        <meta property="og:image" content="https://animedaily.vercel.app/favicon.png" />
+        <meta property="og:url" content="https://animedaily.vercel.app" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="language" content="en" />
+        <meta name="author" content="Rxvxn" />
+        <link rel="canonical" href="https://animedaily.vercel.app" />
+      </Head>
       <Layout>
         <section className="py-10">
           <div className="container mx-auto px-8">

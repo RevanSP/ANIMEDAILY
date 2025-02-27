@@ -102,7 +102,7 @@ const LibraryPage = () => {
       setShowToast(false);
     }, 6000);
   };
-  
+
   const getPaginationRange = () => {
     if (isMobile) {
       const start = Math.floor((currentPage - 1) / 5) * 5 + 1;
@@ -116,176 +116,191 @@ const LibraryPage = () => {
   const pageNumbers = getPaginationRange();
 
   return (
-    <Layout>
-      {showToast && (
-        <div className={`toast toast-center mb-24 ${fadeOut ? 'fade-out' : ''}`}>
-          <div className="alert bg-base-300 border-2 border-orange rounded-xl">
-            <span>Delete Successful !</span>
+    <>
+      <Head>
+        <title>Your Library - ANIMEDAILY</title>
+        <meta name="description" content="Browse and manage your anime collection in your personal library on ANIMEDAILY." />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="Your Library - ANIMEDAILY" />
+        <meta property="og:description" content="Manage and explore your personal anime collection with ease on ANIMEDAILY's library page." />
+        <meta property="og:image" content="https://animedaily.vercel.app/favicon.png" />
+        <meta property="og:url" content="https://animedaily.vercel.app/library" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="language" content="en" />
+        <meta name="author" content="Rxvxn" />
+        <link rel="canonical" href="https://animedaily.vercel.app/library" />
+      </Head>
+      <Layout>
+        {showToast && (
+          <div className={`toast toast-center mb-24 ${fadeOut ? 'fade-out' : ''}`}>
+            <div className="alert bg-base-300 border-2 border-orange rounded-xl">
+              <span>Delete Successful !</span>
+            </div>
           </div>
-        </div>
-      )}
-      <dialog id="delete_library" className="modal">
-        <div className="modal-box border-orange border-2 rounded-lg">
-          <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-          </form>
-          <h3 className="font-bold text-lg">DELETE LIBRARY</h3>
-          <p className="py-4">
-            {isMultipleDelete
-              ? "Are you sure you want to delete the selected data?"
-              : "Are you sure you want to delete this data?"}
-          </p>
-          <div className="modal-action">
-            <button
-              onClick={isMultipleDelete ? handleDeleteMultipleAnimes : handleDeleteSingleAnime}
-              className="btn bg-orange hover:bg-base-300 hover:text-orange rounded-lg btn-sm"
-            >
-              SUBMIT
-            </button>
-          </div>
-        </div>
-      </dialog>
-      <section className="py-8 mt-12">
-        <div className="mx-auto px-6 lg:px-16">
-          <div className="flex items-center gap-2 mb-3">
-            <label className="input input-bordered flex items-center gap-2 input-sm border-2 border-orange bg-base-200 w-full">
-              <input
-                type="text"
-                className="grow"
-                placeholder="Search Anime"
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
-              <i className="bi bi-search"></i>
-            </label>
-            <button
-              onClick={() => {
-                setIsMultipleDelete(true);
-                document.getElementById("delete_library").showModal();
-              }}
-              className={`btn btn-sm btn-square bg-orange hover:bg-base-300 hover:text-orange ${isDeleteButtonEnabled ? '' : 'btn-disabled'}`}
-              disabled={!isDeleteButtonEnabled}
-            >
-              <i className="bi bi-x-circle"></i>
-            </button>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="table table-xs table-zebra">
-              <thead>
-                <tr>
-                  <th>
-                    <div className="form-control">
-                      <label className="cursor-pointer label">
-                        <input
-                          type="checkbox"
-                          checked={selectAll}
-                          onChange={handleSelectAllChange}
-                          className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
-                        />
-                      </label>
-                    </div>
-                  </th>
-                  <th>TITLE</th>
-                  <th>ACTION</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentData.length > 0 ? (
-                  currentData.map((anime, index) => (
-                    <tr key={index}>
-                      <td>
-                        <div className="form-control">
-                          <label className="cursor-pointer label">
-                            <input
-                              type="checkbox"
-                              checked={selectAll || anime.checked}
-                              onChange={(event) => handleCheckboxChange(event, index)}
-                              className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
-                            />
-                          </label>
-                        </div>
-                      </td>
-                      <td className="truncate text-xs">{anime.title}</td>
-                      <td>
-                        <button
-                          onClick={() => {
-                            setIsMultipleDelete(false);
-                            setAnimeToDelete(anime.title);
-                            document.getElementById("delete_library").showModal();
-                          }}
-                          className="btn bg-orange hover:bg-base-300 btn-xs btn-square hover:text-orange"
-                        >
-                          <i className="bi bi-trash2 text-xs"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="3" className="text-center">No bookmarked animes found.</td>
-                  </tr>
-                )}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>
-                    <div className="form-control">
-                      <label className="cursor-pointer label">
-                        <input
-                          type="checkbox"
-                          checked={selectAll}
-                          onChange={handleSelectAllChange}
-                          className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
-                        />
-                      </label>
-                    </div>
-                  </th>
-                  <th>TITLE</th>
-                  <th>ACTION</th>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-          {showPagination && (
-            <div className="flex space-x-2 justify-center">
+        )}
+        <dialog id="delete_library" className="modal">
+          <div className="modal-box border-orange border-2 rounded-lg">
+            <form method="dialog">
+              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 className="font-bold text-lg">DELETE LIBRARY</h3>
+            <p className="py-4">
+              {isMultipleDelete
+                ? "Are you sure you want to delete the selected data?"
+                : "Are you sure you want to delete this data?"}
+            </p>
+            <div className="modal-action">
               <button
-                className="join-item btn btn-sm btn-square text-orange"
-                onClick={() => handlePageChange(1)}
+                onClick={isMultipleDelete ? handleDeleteMultipleAnimes : handleDeleteSingleAnime}
+                className="btn bg-orange hover:bg-base-300 hover:text-orange rounded-lg btn-sm"
               >
-                <i className="bi bi-chevron-double-left"></i>
-              </button>
-              <button
-                className="join-item btn btn-sm btn-square text-orange"
-                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-              >
-                <i className="bi bi-chevron-left"></i>
-              </button>
-              {pageNumbers.map((pageNumber) => (
-                <button
-                  key={pageNumber}
-                  className={`join-item btn btn-sm btn-square text-orange ${currentPage === pageNumber ? 'btn-active' : ''}`}
-                  onClick={() => handlePageChange(pageNumber)}
-                >
-                  {pageNumber}
-                </button>
-              ))}
-              <button
-                className="join-item btn btn-sm btn-square text-orange"
-                onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-              >
-                <i className="bi bi-chevron-right"></i>
-              </button>
-              <button
-                className="join-item btn btn-sm btn-square text-orange"
-                onClick={() => handlePageChange(totalPages)}
-              >
-                <i className="bi bi-chevron-double-right"></i>
+                SUBMIT
               </button>
             </div>
-          )}
-        </div>
-      </section>
-    </Layout>
+          </div>
+        </dialog>
+        <section className="py-8 mt-12">
+          <div className="mx-auto px-6 lg:px-16">
+            <div className="flex items-center gap-2 mb-3">
+              <label className="input input-bordered flex items-center gap-2 input-sm border-2 border-orange bg-base-200 w-full">
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="Search Anime"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+                <i className="bi bi-search"></i>
+              </label>
+              <button
+                onClick={() => {
+                  setIsMultipleDelete(true);
+                  document.getElementById("delete_library").showModal();
+                }}
+                className={`btn btn-sm btn-square bg-orange hover:bg-base-300 hover:text-orange ${isDeleteButtonEnabled ? '' : 'btn-disabled'}`}
+                disabled={!isDeleteButtonEnabled}
+              >
+                <i className="bi bi-x-circle"></i>
+              </button>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="table table-xs table-zebra">
+                <thead>
+                  <tr>
+                    <th>
+                      <div className="form-control">
+                        <label className="cursor-pointer label">
+                          <input
+                            type="checkbox"
+                            checked={selectAll}
+                            onChange={handleSelectAllChange}
+                            className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
+                          />
+                        </label>
+                      </div>
+                    </th>
+                    <th>TITLE</th>
+                    <th>ACTION</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentData.length > 0 ? (
+                    currentData.map((anime, index) => (
+                      <tr key={index}>
+                        <td>
+                          <div className="form-control">
+                            <label className="cursor-pointer label">
+                              <input
+                                type="checkbox"
+                                checked={selectAll || anime.checked}
+                                onChange={(event) => handleCheckboxChange(event, index)}
+                                className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
+                              />
+                            </label>
+                          </div>
+                        </td>
+                        <td className="truncate text-xs">{anime.title}</td>
+                        <td>
+                          <button
+                            onClick={() => {
+                              setIsMultipleDelete(false);
+                              setAnimeToDelete(anime.title);
+                              document.getElementById("delete_library").showModal();
+                            }}
+                            className="btn bg-orange hover:bg-base-300 btn-xs btn-square hover:text-orange"
+                          >
+                            <i className="bi bi-trash2 text-xs"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="3" className="text-center">No bookmarked animes found.</td>
+                    </tr>
+                  )}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th>
+                      <div className="form-control">
+                        <label className="cursor-pointer label">
+                          <input
+                            type="checkbox"
+                            checked={selectAll}
+                            onChange={handleSelectAllChange}
+                            className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
+                          />
+                        </label>
+                      </div>
+                    </th>
+                    <th>TITLE</th>
+                    <th>ACTION</th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            {showPagination && (
+              <div className="flex space-x-2 justify-center">
+                <button
+                  className="join-item btn btn-sm btn-square text-orange"
+                  onClick={() => handlePageChange(1)}
+                >
+                  <i className="bi bi-chevron-double-left"></i>
+                </button>
+                <button
+                  className="join-item btn btn-sm btn-square text-orange"
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                >
+                  <i className="bi bi-chevron-left"></i>
+                </button>
+                {pageNumbers.map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    className={`join-item btn btn-sm btn-square text-orange ${currentPage === pageNumber ? 'btn-active' : ''}`}
+                    onClick={() => handlePageChange(pageNumber)}
+                  >
+                    {pageNumber}
+                  </button>
+                ))}
+                <button
+                  className="join-item btn btn-sm btn-square text-orange"
+                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                >
+                  <i className="bi bi-chevron-right"></i>
+                </button>
+                <button
+                  className="join-item btn btn-sm btn-square text-orange"
+                  onClick={() => handlePageChange(totalPages)}
+                >
+                  <i className="bi bi-chevron-double-right"></i>
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+      </Layout>
+    </>
   );
 };
 

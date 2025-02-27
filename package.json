@@ -3,16 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "bun next dev --turbopack",
+    "build": "bun next build",
+    "start": "bun next start",
+    "lint": "bun next lint",
+    "postbuild": "bun next-sitemap --config next-sitemap-config.js"
   },
   "dependencies": {
     "aos": "^2.3.4",
     "bootstrap-icons": "^1.11.3",
     "firebase": "^11.2.0",
     "next": "15.1.3",
+    "next-sitemap": "^4.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
