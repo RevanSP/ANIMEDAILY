@@ -10,6 +10,12 @@ const Layout = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
+    if (router.pathname === '/layout/Layout') {
+      router.push('/');
+    }
+  }, [router]);
+
+  useEffect(() => {
     const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
       const [key, value] = cookie.split("=");
       acc[key] = value;
