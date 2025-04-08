@@ -1,36 +1,37 @@
 import Layout from "./layout/Layout";
 import Head from "next/head";
+import { BsPlay, BsPatchCheck, BsSearch, BsBookmarkCheck, BsShieldCheck, BsLaptop } from "react-icons/bs";
 
 export default function Home() {
 
   const features = [
     {
-      icon: "bi-play",
+      icon: <BsPlay />,
       title: "Start Watching",
       description: "Click on any anime and start streaming instantly without waiting."
     },
     {
-      icon: "bi-patch-check",
+      icon: <BsPatchCheck />,
       title: "Enjoy Seamlessly",
       description: "Sit back, relax, and enjoy a seamless streaming experience."
     },
     {
-      icon: "bi-search",
+      icon: <BsSearch />,
       title: "Browse Content",
       description: "Find your favorite anime quickly with our easy-to-use search features."
     },
     {
-      icon: "bi-bookmark-check",
+      icon: <BsBookmarkCheck />,
       title: "Watchlist",
       description: "Save your favorite anime and episodes for easy access later."
     },
     {
-      icon: "bi-shield-check",
+      icon: <BsShieldCheck />,
       title: "Secure Streaming",
       description: "Your data is always protected with our state-of-the-art security measures."
     },
     {
-      icon: "bi-laptop",
+      icon: <BsLaptop />,
       title: "Cross-Platform Support",
       description: "Watch on any device—whether it’s your phone, tablet, or desktop."
     }
@@ -57,8 +58,8 @@ export default function Home() {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-12">
               {features.map((feature, index) => (
                 <div className="text-center" key={index}>
-                  <div className="bg-orange rounded-full p-6 inline-block mb-4">
-                    <i className={`bi ${feature.icon} text-5xl`}></i>
+                  <div className="bg-orange rounded-full p-6 inline-block mb-4 text-4xl">
+                    {feature.icon}
                   </div>
                   <h1 className="text-xl font-semibold mb-2">{feature.title}</h1>
                   <p className="text-gray-600">{feature.description}</p>

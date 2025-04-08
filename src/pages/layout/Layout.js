@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from "next/image";
+import { BsHouseDoor, BsHouseDoorFill, BsBookmark, BsBookmarkFill, BsPlayBtn, BsFillPlayBtnFill, BsLock, BsEnvelope, BsGithub, BsInstagram, BsFacebook, BsInfoCircleFill, BsPersonCheck, BsPersonLock, BsMoonStars, BsBrightnessHigh } from 'react-icons/bs';
 
 const Layout = ({ children }) => {
   const [theme, setTheme] = useState("black");
@@ -44,9 +45,9 @@ const Layout = ({ children }) => {
   const isActive = (path) => router.pathname === path;
 
   const socialLinks = [
-    { icon: "bi-github", href: "https://github.com/RevanSP", label: "Github" },
-    { icon: "bi-instagram", href: "https://www.instagram.com/m9nokuro/", label: "Instagram" },
-    { icon: "bi-facebook", href: "https://web.facebook.com/profile.php?id=100082958149027&_rdc=1&_rdr", label: "Facebook" },
+    { icon: BsGithub, href: "https://github.com/RevanSP", label: "Github" },
+    { icon: BsInstagram, href: "https://www.instagram.com/m9nokuro/", label: "Instagram" },
+    { icon: BsFacebook, href: "https://web.facebook.com/profile.php?id=100082958149027&_rdc=1&_rdr", label: "Facebook" },
   ];
 
   const isHomePage = router.pathname === "/";
@@ -143,8 +144,8 @@ const Layout = ({ children }) => {
             />
           </div>
           <form onSubmit={handleSubmit}>
-            <label className="input input-bordered flex items-center gap-2 border-orange bg-base-200 border-2  w-full mb-4">
-              <i className="bi bi-envelope text-orange"></i>
+            <label className="input input-bordered flex items-center gap-2 border-orange bg-base-200 border-2 w-full mb-4">
+              <BsEnvelope className="text-orange" />
               <input
                 type="email"
                 className="grow"
@@ -153,8 +154,8 @@ const Layout = ({ children }) => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </label>
-            <label className="input input-bordered flex items-center gap-2 border-orange bg-base-200 border-2  w-full mb-4">
-              <i className="bi bi-key text-orange"></i>
+            <label className="input input-bordered flex items-center gap-2 border-orange bg-base-200 border-2 w-full mb-4">
+              <BsLock className="text-orange" />
               <input
                 type="password"
                 className="grow"
@@ -165,7 +166,7 @@ const Layout = ({ children }) => {
             </label>
             <button
               type="submit"
-              className="btn bg-orange hover:bg-base-200 w-full mt-4 "
+              className="btn bg-orange hover:bg-base-200 w-full mt-4"
               disabled={isLoading}
             >
               {buttonText}
@@ -179,9 +180,13 @@ const Layout = ({ children }) => {
             <button
               className="btn btn-ghost btn-circle"
               onClick={toggleTheme}
-              aria-label={theme === "black" ? "Switch to light theme" : "Switch to dark theme"} // Added aria-label
+              aria-label={theme === "black" ? "Switch to light theme" : "Switch to dark theme"}
             >
-              <i className={`bi ${theme === "black" ? "bi-brightness-high" : "bi-moon-stars"} text-orange`}></i>
+              {theme === "black" ? (
+                <BsBrightnessHigh className="text-orange" />
+              ) : (
+                <BsMoonStars className="text-orange" />
+              )}
             </button>
           </div>
           <div className="navbar-center">
@@ -195,7 +200,11 @@ const Layout = ({ children }) => {
                 className="btn text-orange btn-ghost btn-circle"
                 aria-label={isLoggedIn || isLoggedInDeveloper ? "Profile settings" : "Login"}
               >
-                <i className={`bi ${isLoggedIn || isLoggedInDeveloper ? "bi-person-check" : "bi-person-lock"}`}></i>
+                {isLoggedIn || isLoggedInDeveloper ? (
+                  <BsPersonCheck className="text-orange" />
+                ) : (
+                  <BsPersonLock className="text-orange" />
+                )}
               </div>
               <ul tabIndex={0} className="dropdown-content menu bg-base-300 rounded-box z-[1] w-40 p-2 mr-2">
                 {isLoggedIn || isLoggedInDeveloper ? (
@@ -234,7 +243,7 @@ const Layout = ({ children }) => {
                     data-tip="Works only on certain browsers, e.g., Chrome."
                     aria-label="Information about browser compatibility"
                   >
-                    <i className="bi bi-info-circle-fill text-orange"></i>
+                    <BsInfoCircleFill className="text-orange" />
                   </button>
                 </div>
               </div>
@@ -254,7 +263,7 @@ const Layout = ({ children }) => {
                   href={social.href}
                   aria-label={social.label}
                 >
-                  <i className={`bi ${social.icon} text-xl`}></i>
+                  <social.icon className="text-xl" />
                 </a>
               ))}
             </div>
@@ -268,22 +277,22 @@ const Layout = ({ children }) => {
         {router.pathname !== '/dev/dashboard' && (
           <div className="btm-nav btm-nav-md bg-base-300 !z-50">
             <Link href="/library" className={isActive('/library') ? 'active text-orange' : ''}>
-              <i className={`bi bi-bookmark${isActive('/library') ? '-fill' : ''}`}></i>
+              {isActive('/library') ? <BsBookmarkFill /> : <BsBookmark />}
               <span className="btm-nav-label">LIBRARY</span>
             </Link>
+
             <a
               href="#"
               onClick={() => {
                 window.location.href = '/';
               }}
-              className={isActive('/') ? 'active text-orange' : ''}
-            >
-              <i className={`bi bi-house-door${isActive('/') ? '-fill' : ''}`}></i>
+              className={isActive('/') ? 'active text-orange' : ''}>
+              {isActive('/') ? <BsHouseDoorFill /> : <BsHouseDoor />}
               <span className="btm-nav-label">HOME</span>
             </a>
 
             <Link href="/anime" className={isActive('/anime') ? 'active text-orange' : ''}>
-              <i className={`bi bi-play-btn${isActive('/anime') ? '-fill' : ''}`}></i>
+              {isActive('/anime') ? <BsFillPlayBtnFill /> : <BsPlayBtn />}
               <span className="btm-nav-label">ANIME</span>
             </Link>
           </div>

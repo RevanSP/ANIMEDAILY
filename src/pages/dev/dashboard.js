@@ -2,6 +2,7 @@ import Layout from "../layout/Layout";
 import { db, collection, getDocs, deleteDoc, doc, addDoc, updateDoc } from "../../lib/firebase";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { BsBuildings, BsCameraReels, BsCheckCircle, BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsCloudUpload, BsExclamationDiamond, BsExclamationOctagon, BsExclamationTriangle, BsFileEarmarkPlay, BsHourglassSplit, BsImage, BsPencilSquare, BsPlusCircle, BsSearch, BsTrash2, BsTypeH1, BsTypeH2, BsTypeH3, BsXCircle, BsXOctagon } from "react-icons/bs";
 
 export default function Dashboard() {
   const [animeData, setAnimeData] = useState([]);
@@ -410,20 +411,21 @@ export default function Dashboard() {
             </button>
           </form>
           <h3 className="font-bold text-lg mb-4">EDIT ANIME</h3>
+
           <form onSubmit={handleEditSubmit}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              {[{ icon: "bi-type-h1", placeholder: "TITLE", value: editAnimeDetails.title, field: "title" },
-              { icon: "bi-image", placeholder: "COVER IMG", value: editAnimeDetails.coverImg, field: "coverImg" },
-              { icon: "bi-type-h2", placeholder: "ALT TITLE", value: editAnimeDetails.altTitle, field: "altTitle" },
-              { icon: "bi-type-h3", placeholder: "ALT TITLE (JAPANESE)", value: editAnimeDetails.altTitleJapanese, field: "altTitleJapanese" },
-              { icon: "bi-exclamation-octagon", placeholder: "STATUS", value: editAnimeDetails.status, field: "status" },
-              { icon: "bi-buildings", placeholder: "STUDIO", value: editAnimeDetails.studio, field: "studio" },
-              { icon: "bi-hourglass-split", placeholder: "DURATION", value: editAnimeDetails.duration, field: "duration" },
-              { icon: "bi-exclamation-triangle", placeholder: "SEASON", value: editAnimeDetails.season, field: "season" },
-              { icon: "bi-exclamation-diamond", placeholder: "TYPE", value: editAnimeDetails.type, field: "type" },
-              { icon: "bi-file-earmark-play", placeholder: "TOTAL EPISODE", value: editAnimeDetails.totalEpisodes, field: "totalEpisodes" }].map((field, index) => (
+              {[{ icon: <BsTypeH1 />, placeholder: "TITLE", value: editAnimeDetails.title, field: "title" },
+              { icon: <BsImage />, placeholder: "COVER IMG", value: editAnimeDetails.coverImg, field: "coverImg" },
+              { icon: <BsTypeH2 />, placeholder: "ALT TITLE", value: editAnimeDetails.altTitle, field: "altTitle" },
+              { icon: <BsTypeH3 />, placeholder: "ALT TITLE (JAPANESE)", value: editAnimeDetails.altTitleJapanese, field: "altTitleJapanese" },
+              { icon: <BsExclamationOctagon />, placeholder: "STATUS", value: editAnimeDetails.status, field: "status" },
+              { icon: <BsBuildings />, placeholder: "STUDIO", value: editAnimeDetails.studio, field: "studio" },
+              { icon: <BsHourglassSplit />, placeholder: "DURATION", value: editAnimeDetails.duration, field: "duration" },
+              { icon: <BsExclamationTriangle />, placeholder: "SEASON", value: editAnimeDetails.season, field: "season" },
+              { icon: <BsExclamationDiamond />, placeholder: "TYPE", value: editAnimeDetails.type, field: "type" },
+              { icon: <BsFileEarmarkPlay />, placeholder: "TOTAL EPISODE", value: editAnimeDetails.totalEpisodes, field: "totalEpisodes" }].map((field, index) => (
                 <label key={index} className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-200 input-sm">
-                  <i className={`bi ${field.icon} text-xs text-orange`}></i>
+                  {field.icon}
                   <input
                     type="text"
                     className="grow text-xs"
@@ -436,7 +438,7 @@ export default function Dashboard() {
               ))}
             </div>
             <label className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-200 mb-4 input-sm">
-              <i className="bi bi-camera-reels text-xs text-orange"></i>
+              <BsCameraReels className="text-xs" />
               <input
                 type="text"
                 className="grow text-xs"
@@ -477,7 +479,7 @@ export default function Dashboard() {
                     className="btn join-item border-2 border-orange btn-sm btn-square bg-orange hover:bg-base-300 hover:text-orange"
                     onClick={(e) => handleEpisodeRemove(e, index)}
                   >
-                    <i className="bi bi-x-octagon text-xs"></i>
+                    <BsXOctagon className="text-xs" />
                   </button>
                 </div>
               ))}
@@ -505,6 +507,7 @@ export default function Dashboard() {
               </div>
             </div>
           </form>
+
         </div>
       </dialog>
       <dialog id="add_anime" className="modal">
@@ -516,18 +519,18 @@ export default function Dashboard() {
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               {[
-                { label: "TITLE", icon: "bi-type-h1", field: "title", type: "text" },
-                { label: "COVER IMG", icon: "bi-image", field: "coverImg", type: "url" },
-                { label: "ALT TITLE", icon: "bi-type-h2", field: "altTitle", type: "text" },
-                { label: "ALT TITLE (JAPANESE)", icon: "bi-type-h3", field: "altTitleJapanese", type: "text" },
-                { label: "STATUS", icon: "bi-exclamation-octagon", field: "status", type: "text" },
-                { label: "STUDIO", icon: "bi-buildings", field: "studio", type: "text" },
-                { label: "DURATION", icon: "bi-hourglass-split", field: "duration", type: "text" },
-                { label: "SEASON", icon: "bi-exclamation-triangle", field: "season", type: "text" },
-                { label: "TYPE", icon: "bi-exclamation-diamond", field: "type", type: "text" },
+                { label: "TITLE", icon: <BsTypeH1 />, field: "title", type: "text" },
+                { label: "COVER IMG", icon: <BsImage />, field: "coverImg", type: "url" },
+                { label: "ALT TITLE", icon: <BsTypeH2 />, field: "altTitle", type: "text" },
+                { label: "ALT TITLE (JAPANESE)", icon: <BsTypeH3 />, field: "altTitleJapanese", type: "text" },
+                { label: "STATUS", icon: <BsExclamationOctagon />, field: "status", type: "text" },
+                { label: "STUDIO", icon: <BsBuildings />, field: "studio", type: "text" },
+                { label: "DURATION", icon: <BsHourglassSplit />, field: "duration", type: "text" },
+                { label: "SEASON", icon: <BsExclamationTriangle />, field: "season", type: "text" },
+                { label: "TYPE", icon: <BsExclamationDiamond />, field: "type", type: "text" },
               ].map(({ label, icon, field, type }) => (
                 <label key={field} className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-200 input-sm">
-                  <i className={`bi ${icon} text-xs text-orange`} />
+                  {icon}
                   <input
                     type={type}
                     className="grow text-xs"
@@ -539,7 +542,7 @@ export default function Dashboard() {
                 </label>
               ))}
               <label className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-200 input-sm">
-                <i className="bi bi-file-earmark-play text-xs text-orange"></i>
+                <BsFileEarmarkPlay className="text-xs" />
                 <input
                   type="text"
                   className="grow text-xs"
@@ -551,7 +554,7 @@ export default function Dashboard() {
               </label>
             </div>
             <label className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-200 mb-4 input-sm">
-              <i className="bi bi-camera-reels text-xs text-orange"></i>
+              <BsCameraReels className="text-xs" />
               <input
                 type="text"
                 className="grow text-xs"
@@ -594,7 +597,7 @@ export default function Dashboard() {
                       type="button"
                       onClick={() => removeEpisode(index)}
                     >
-                      <i className="bi bi-x-octagon text-xs"></i>
+                      <BsXOctagon className="text-xs" />
                     </button>
                   )}
                 </div>
@@ -670,7 +673,7 @@ export default function Dashboard() {
               {loading ? (
                 <span className="loading loading-spinner loading-xs"></span>
               ) : isSuccess ? (
-                <i className="bi bi-check-circle"></i>
+                <BsCheckCircle />
               ) : (
                 'SUBMIT'
               )}
@@ -694,7 +697,7 @@ export default function Dashboard() {
                       setCurrentPage(1);
                     }}
                   />
-                  <i className="bi bi-search hidden sm:block"></i>
+                  <BsSearch className="hidden sm:block" />
                 </label>
                 <div className="flex gap-2">
                   <button
@@ -702,19 +705,19 @@ export default function Dashboard() {
                     className="btn btn-sm btn-square bg-orange hover:bg-base-300 hover:text-orange"
                     disabled={selectedAnimeIds.length === 0}
                   >
-                    <i className="bi bi-x-circle text-xs"></i>
+                    <BsXCircle className="text-xs" />
                   </button>
                   <button
                     onClick={() => document.getElementById('add_anime').showModal()}
                     className="btn btn-sm btn-square bg-orange hover:bg-base-300 hover:text-orange"
                   >
-                    <i className="bi bi-plus-circle text-xs"></i>
+                    <BsPlusCircle className="text-xs" />
                   </button>
                   <button
                     onClick={() => document.getElementById('redeploy').showModal()}
                     className="btn btn-sm btn-square bg-orange hover:bg-base-300 hover:text-orange"
                   >
-                    <i className="bi bi-cloud-upload text-xs"></i>
+                    <BsCloudUpload className="text-xs" />
                   </button>
                 </div>
               </div>
@@ -761,14 +764,14 @@ export default function Dashboard() {
                           <td className="truncate">
                             <div className="join">
                               <button className="btn join-item btn-xs btn-square text-orange" onClick={() => handleEdit(anime)}>
-                                <i className="bi bi-pencil-square"></i>
+                                <BsPencilSquare className="text-xs" />
                               </button>
 
                               <button
                                 className="btn join-item btn-xs btn-square text-orange"
                                 onClick={() => handleOpenDeleteModal(anime.id)}
                               >
-                                <i className="bi bi-trash2"></i>
+                                <BsTrash2 className="text-xs" />
                               </button>
                             </div>
                           </td>
@@ -802,14 +805,14 @@ export default function Dashboard() {
                     onClick={() => handlePageChange(1)}
                     disabled={currentPage === 1}
                   >
-                    <i className="bi bi-chevron-double-left"></i>
+                    <BsChevronDoubleLeft className="text-xs" />
                   </button>
                   <button
                     className="join-item btn btn-xs btn-square text-orange"
                     onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                     disabled={currentPage === 1}
                   >
-                    <i className="bi bi-chevron-left"></i>
+                    <BsChevronLeft className="text-xs" />
                   </button>
                   {getPaginationRange().map((pageNumber) => (
                     <button
@@ -825,14 +828,14 @@ export default function Dashboard() {
                     onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
                     disabled={currentPage === totalPages}
                   >
-                    <i className="bi bi-chevron-right"></i>
+                    <BsChevronRight className="text-xs" />
                   </button>
                   <button
                     className="join-item btn btn-xs btn-square text-orange"
                     onClick={() => handlePageChange(totalPages)}
                     disabled={currentPage === totalPages}
                   >
-                    <i className="bi bi-chevron-double-right"></i>
+                    <BsChevronDoubleRight className="text-xs" />
                   </button>
                 </div>
               )}

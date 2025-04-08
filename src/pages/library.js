@@ -1,6 +1,7 @@
 import Layout from "./layout/Layout";
 import { useState, useEffect } from "react";
 import Head from "next/head";
+import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsSearch, BsTrash2, BsXLg } from "react-icons/bs";
 
 const LibraryPage = () => {
   const [bookmarkedAnimes, setBookmarkedAnimes] = useState([]);
@@ -171,7 +172,7 @@ const LibraryPage = () => {
                   value={searchQuery}
                   onChange={handleSearchChange}
                 />
-                <i className="bi bi-search"></i>
+                <BsSearch />
               </label>
               <button
                 onClick={() => {
@@ -182,7 +183,7 @@ const LibraryPage = () => {
                 disabled={!isDeleteButtonEnabled}
                 aria-label="Delete selected items"
               >
-                <i className="bi bi-x-circle"></i>
+                <BsXLg />
               </button>
             </div>
             <div className="overflow-x-auto">
@@ -228,7 +229,7 @@ const LibraryPage = () => {
                             }}
                             className="btn bg-orange hover:bg-base-300 btn-xs btn-square hover:text-orange"
                           >
-                            <i className="bi bi-trash2 text-xs"></i>
+                            <BsTrash2 className="text-xs" />
                           </button>
                         </td>
                       </tr>
@@ -262,13 +263,13 @@ const LibraryPage = () => {
                   className="join-item btn btn-sm btn-square text-orange"
                   onClick={() => handlePageChange(1)}
                 >
-                  <i className="bi bi-chevron-double-left"></i>
+                  <BsChevronDoubleLeft />
                 </button>
                 <button
                   className="join-item btn btn-sm btn-square text-orange"
                   onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 >
-                  <i className="bi bi-chevron-left"></i>
+                  <BsChevronLeft />
                 </button>
                 {pageNumbers.map((pageNumber) => (
                   <button
@@ -283,13 +284,13 @@ const LibraryPage = () => {
                   className="join-item btn btn-sm btn-square text-orange"
                   onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
                 >
-                  <i className="bi bi-chevron-right"></i>
+                  <BsChevronRight />
                 </button>
                 <button
                   className="join-item btn btn-sm btn-square text-orange"
                   onClick={() => handlePageChange(totalPages)}
                 >
-                  <i className="bi bi-chevron-double-right"></i>
+                  <BsChevronDoubleRight />
                 </button>
               </div>
             )}

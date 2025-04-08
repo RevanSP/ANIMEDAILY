@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { db, collection, getDocs } from "@/lib/firebase";
 import Head from "next/head";
+import { BsArrowClockwise, BsBookmark, BsBookmarkFill, BsCheckCircle, BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsInfoCircle, BsSearch } from "react-icons/bs";
 
 const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
   useAOS();
@@ -143,7 +144,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
         }}
         aria-label="Reset filters"
       >
-        <i className="bi bi-arrow-clockwise"></i>
+        <BsArrowClockwise />
       </button>
 
       {Array.from({ length: 26 }, (_, i) => {
@@ -400,14 +401,14 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                     value={searchQuery}
                     onChange={handleSearchChange}
                   />
-                  <i className="bi bi-search"></i>
+                  <BsSearch />
                 </label>
                 <button
                   className="btn btn-square bg-orange hover:bg-base-300 hover:text-orange"
                   onClick={handleSearchSubmit}
                   aria-label="Search"
                 >
-                  <i className="bi bi-check2-circle"></i>
+                  <BsCheckCircle />
                 </button>
               </div>
               <div className="flex items-center gap-2 mt-2">
@@ -463,7 +464,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
             <div className="mx-auto sm:px-6 lg:px-6">
               {currentItems.length === 0 ? (
                 <div role="alert" className="alert border-2 border-orange bg-base-200 text-orange" data-aos="fade-up">
-                  <i className="bi bi-info-circle"></i>
+                  <BsInfoCircle />
                   <span>NOT FOUND</span>
                 </div>
               ) : (
@@ -490,7 +491,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                           onClick={() => toggleBookmark(title)}
                           aria-label={isBookmarked ? `Remove ${title} from bookmarks` : `Add ${title} to bookmarks`}
                         >
-                          <i className={`bi ${isBookmarked ? 'bi-bookmark-fill' : 'bi-bookmark'}`}></i>
+                          {isBookmarked ? <BsBookmarkFill /> : <BsBookmark />}
                         </button>
                         <div className="relative aspect-[2/3] w-full overflow-hidden" onClick={() => handleAnimeClick(anime)}>
                           {anime.coverImg && (
@@ -521,7 +522,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                   disabled={pageGroup === 1}
                   aria-label="Previous page group"
                 >
-                  <i className="bi bi-chevron-double-left"></i>
+                  <BsChevronDoubleLeft />
                 </button>
 
                 <button
@@ -530,7 +531,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                   disabled={currentPage === 1}
                   aria-label="Previous page"
                 >
-                  <i className="bi bi-chevron-left"></i>
+                  <BsChevronLeft />
                 </button>
 
                 {Array.from({ length: endPage - startPage + 1 }, (_, i) => {
@@ -553,7 +554,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                   disabled={currentPage === totalPages}
                   aria-label="Next page"
                 >
-                  <i className="bi bi-chevron-right"></i>
+                  <BsChevronRight />
                 </button>
 
                 <button
@@ -562,7 +563,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                   disabled={pageGroup * maxPageButtons >= totalPages}
                   aria-label="Next page group"
                 >
-                  <i className="bi bi-chevron-double-right"></i>
+                  <BsChevronDoubleRight />
                 </button>
               </div>
             )}
