@@ -191,13 +191,18 @@ const LibraryPage = () => {
                 <thead>
                   <tr>
                     <th>
-                      <label for="checkbox-header" class="sr-only">Select All</label>
-                      <input id="checkbox-header"
-                        type="checkbox"
-                        checked={selectAll}
-                        onChange={handleSelectAllChange}
-                        className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
-                      />
+                      <div className="form-control">
+                        <label className="cursor-pointer label">
+                          <input
+                            id="checkbox-header"
+                            type="checkbox"
+                            checked={selectAll}
+                            onChange={handleSelectAllChange}
+                            className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
+                          />
+                          <span className="sr-only">Select All</span>
+                        </label>
+                      </div>
                     </th>
                     <th>TITLE</th>
                     <th>ACTION</th>
@@ -216,6 +221,7 @@ const LibraryPage = () => {
                                 onChange={(event) => handleCheckboxChange(event, index)}
                                 className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
                               />
+                              <span className="sr-only">Select {anime.title}</span>
                             </label>
                           </div>
                         </td>
@@ -243,13 +249,18 @@ const LibraryPage = () => {
                 <tfoot>
                   <tr>
                     <th>
-                      <label for="checkbox-footer" class="sr-only">Footer Checkbox</label>
-                      <input id="checkbox-footer"
-                        type="checkbox"
-                        checked={selectAll}
-                        onChange={handleSelectAllChange}
-                        className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
-                      />
+                      <div className="form-control">
+                        <label className="cursor-pointer label">
+                          <input
+                            id="checkbox-footer"
+                            type="checkbox"
+                            checked={selectAll}
+                            onChange={handleSelectAllChange}
+                            className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
+                          />
+                          <span className="sr-only">Footer Checkbox</span>
+                        </label>
+                      </div>
                     </th>
                     <th>TITLE</th>
                     <th>ACTION</th>
