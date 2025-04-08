@@ -488,7 +488,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                         <button
                           className="btn bg-orange hover:bg-base-300 btn-square btn-sm absolute top-2 right-2 z-10 border-orange hover:border-orange hover:text-orange"
                           onClick={() => toggleBookmark(title)}
-                          aria-label={isBookmarked ? `Remove ${title} from bookmarks` : `Add ${title} to bookmarks`} 
+                          aria-label={isBookmarked ? `Remove ${title} from bookmarks` : `Add ${title} to bookmarks`}
                         >
                           <i className={`bi ${isBookmarked ? 'bi-bookmark-fill' : 'bi-bookmark'}`}></i>
                         </button>
@@ -499,7 +499,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                               src={anime.coverImg}
                               fill
                               sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, (max-width: 1280px) 20vw, 16vw"
-                              className="object-cover object-center transition-transform duration-300 ease-in-out transform hover:scale-110 hover:rotate-3"
+                              className="object-cover object-center transition-transform duration-300 ease-in-out transform hover:scale-110 hover:rotate-3 cursor-pointer"
                               priority
                             />
                           )}
