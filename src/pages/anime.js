@@ -141,6 +141,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
           setAnimeData(originalAnimeData);
           setCurrentPage(1);
         }}
+        aria-label="Reset filters"
       >
         <i className="bi bi-arrow-clockwise"></i>
       </button>
@@ -285,7 +286,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
         <meta name="robots" content="index, follow" />
         <meta property="og:title" content="Anime List - ANIMEDAILY" />
         <meta property="og:description" content="Stay updated with the latest anime titles and in-depth reviews at ANIMEDAILY's anime section." />
-        <meta property="og:image" content="https://animedaily.vercel.app/favicon.png" />
+        <meta property="og:image" content="https://animedaily.vercel.app/favicon.avif" />
         <meta property="og:url" content="https://animedaily.vercel.app/anime" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="language" content="en" />
@@ -338,7 +339,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                   <div className="flex-1 bg-base-300 p-4 rounded-lg">
                     <div className="flex">
                       <div className="w-32 h-48 flex-shrink-0 relative">
-                        <Image
+                        <Image unoptimized
                           src={selectedAnime.coverImg}
                           alt="Cover"
                           fill
@@ -404,12 +405,15 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                 <button
                   className="btn btn-square bg-orange hover:bg-base-300 hover:text-orange"
                   onClick={handleSearchSubmit}
+                  aria-label="Search"
                 >
                   <i className="bi bi-check2-circle"></i>
                 </button>
               </div>
               <div className="flex items-center gap-2 mt-2">
+                <label htmlFor="genre-select" className="sr-only">Genre</label>
                 <select
+                  id="genre-select"
                   className="select select-bordered border-2 border-orange bg-base-200 text-xs w-full uppercase"
                   value={selectedGenre}
                   onChange={handleGenreChange}
@@ -419,8 +423,10 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                     genre && <option key={index} value={genre}>{genre}</option>
                   ))}
                 </select>
+                <label htmlFor="status-select" className="sr-only">Status</label>
                 <select
-                  className="select select-bordered border-2 text-xs border-orange bg-base-200 "
+                  id="status-select"
+                  className="select select-bordered border-2 text-xs border-orange bg-base-200"
                   value={selectedStatus}
                   onChange={handleStatusChange}
                 >
@@ -429,7 +435,9 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                   <option value="ONGOING">ONGOING</option>
                   <option value="HIATUS">HIATUS</option>
                 </select>
+                <label htmlFor="type-select" className="sr-only">Type</label>
                 <select
+                  id="type-select"
                   className="select select-bordered border-2 text-xs border-orange bg-base-200"
                   value={selectedType}
                   onChange={handleTypeChange}
@@ -480,12 +488,13 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                         <button
                           className="btn bg-orange hover:bg-base-300 btn-square btn-sm absolute top-2 right-2 z-10 border-orange hover:border-orange hover:text-orange"
                           onClick={() => toggleBookmark(title)}
+                          aria-label={isBookmarked ? `Remove ${title} from bookmarks` : `Add ${title} to bookmarks`} 
                         >
                           <i className={`bi ${isBookmarked ? 'bi-bookmark-fill' : 'bi-bookmark'}`}></i>
                         </button>
                         <div className="relative aspect-[2/3] w-full overflow-hidden" onClick={() => handleAnimeClick(anime)}>
                           {anime.coverImg && (
-                            <Image
+                            <Image unoptimized
                               alt={`Cover for ${title}`}
                               src={anime.coverImg}
                               fill
@@ -510,6 +519,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                   className="join-item btn btn-sm btn-square text-orange"
                   onClick={() => handlePageGroupChange("prev")}
                   disabled={pageGroup === 1}
+                  aria-label="Previous page group"
                 >
                   <i className="bi bi-chevron-double-left"></i>
                 </button>
@@ -518,6 +528,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                   className="join-item btn btn-sm btn-square text-orange"
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
+                  aria-label="Previous page"
                 >
                   <i className="bi bi-chevron-left"></i>
                 </button>
@@ -529,6 +540,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                       key={pageNum}
                       className={`join-item btn btn-sm btn-square text-orange ${currentPage === pageNum ? 'btn-active' : ''}`}
                       onClick={() => handlePageChange(pageNum)}
+                      aria-label={`Go to page ${pageNum}`}
                     >
                       {pageNum}
                     </button>
@@ -539,6 +551,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                   className="join-item btn btn-sm btn-square text-orange"
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
+                  aria-label="Next page"
                 >
                   <i className="bi bi-chevron-right"></i>
                 </button>
@@ -547,6 +560,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
                   className="join-item btn btn-sm btn-square text-orange"
                   onClick={() => handlePageGroupChange("next")}
                   disabled={pageGroup * maxPageButtons >= totalPages}
+                  aria-label="Next page group"
                 >
                   <i className="bi bi-chevron-double-right"></i>
                 </button>

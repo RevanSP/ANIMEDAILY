@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="en" data-theme="black">
       <Head>
-        <link rel="icon" href="/favicon.png" />
+        <link rel="icon" href="/favicon.avif" />
         <link rel="manifest" href="/manifest.json" />
       </Head>
       <body className="antialiased">

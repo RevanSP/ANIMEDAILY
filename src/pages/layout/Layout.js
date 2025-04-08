@@ -134,8 +134,8 @@ const Layout = ({ children }) => {
           </form>
           <h3 className="font-bold text-lg">LOGIN | DEV ZONE</h3>
           <div className="flex items-center justify-center mb-6 mt-3">
-            <Image
-              src="/favicon.png"
+            <Image unoptimized
+              src="/favicon.avif"
               className="w-48" alt="Logo"
               width={0}
               height={0}
@@ -176,31 +176,40 @@ const Layout = ({ children }) => {
       <div className="flex flex-col min-h-screen">
         <div className="navbar bg-base-200 fixed top-0 left-0 w-full z-50">
           <div className="navbar-start">
-            <button className="btn btn-ghost btn-circle" onClick={toggleTheme}>
+            <button
+              className="btn btn-ghost btn-circle"
+              onClick={toggleTheme}
+              aria-label={theme === "black" ? "Switch to light theme" : "Switch to dark theme"} // Added aria-label
+            >
               <i className={`bi ${theme === "black" ? "bi-brightness-high" : "bi-moon-stars"} text-orange`}></i>
             </button>
           </div>
           <div className="navbar-center">
-            <a className="btn btn-ghost text-xl text-orange">ANIMEDAILY.</a>
+            <Link className="btn btn-ghost text-xl text-orange" href="/" aria-label="Go to homepage">ANIMEDAILY.</Link>
           </div>
           <div className="navbar-end">
             <div className="dropdown dropdown-end">
-              <div tabIndex={0} role="button" className="btn text-orange btn-ghost btn-circle">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn text-orange btn-ghost btn-circle"
+                aria-label={isLoggedIn || isLoggedInDeveloper ? "Profile settings" : "Login"}
+              >
                 <i className={`bi ${isLoggedIn || isLoggedInDeveloper ? "bi-person-check" : "bi-person-lock"}`}></i>
               </div>
               <ul tabIndex={0} className="dropdown-content menu bg-base-300 rounded-box z-[1] w-40 p-2 mr-2">
                 {isLoggedIn || isLoggedInDeveloper ? (
                   <>
                     {router.pathname === '/dev/dashboard' ? (
-                      <li><Link href="/">HOME</Link></li>
+                      <li><Link href="/" aria-label="Go to homepage">HOME</Link></li>
                     ) : (
-                      <li><Link href="/dev/dashboard">DASHBOARD</Link></li>
+                      <li><Link href="/dev/dashboard" aria-label="Go to dashboard">DASHBOARD</Link></li>
                     )}
-                    <li><button onClick={handleLogout}>LOGOUT</button></li>
+                    <li><button onClick={handleLogout} aria-label="Logout">LOGOUT</button></li>
                   </>
                 ) : (
                   <li>
-                    <button onClick={() => document.getElementById('login').showModal()}>LOGIN</button>
+                    <button onClick={() => document.getElementById('login').showModal()} aria-label="Open login modal">LOGIN</button>
                   </li>
                 )}
               </ul>
@@ -208,7 +217,7 @@ const Layout = ({ children }) => {
           </div>
         </div>
         {isHomePage && (
-          <div className="hero relative mt-16" style={{ backgroundImage: "url(/herosection.jpg)" }}>
+          <div className="hero relative mt-16" style={{ backgroundImage: "url(/herosection.avif)" }}>
             <div className="absolute inset-0 bg-black opacity-75"></div>
             <div className="py-14 hero-content text-neutral-content text-center relative">
               <div className="max-w-md">
@@ -223,6 +232,7 @@ const Layout = ({ children }) => {
                   <button
                     className="btn join-item border-orange border-2 bg-base-100 tooltip tooltip-left before:w-[12rem] before:content-[attr(data-tip)] rounded-lg"
                     data-tip="Works only on certain browsers, e.g., Chrome."
+                    aria-label="Information about browser compatibility"
                   >
                     <i className="bi bi-info-circle-fill text-orange"></i>
                   </button>
@@ -238,7 +248,12 @@ const Layout = ({ children }) => {
           <nav>
             <div className="grid grid-flow-col gap-4">
               {socialLinks.map((social, index) => (
-                <a key={index} className="btn bg-orange btn-circle hover:bg-base-300 border-none hover:text-orange" href={social.href}>
+                <a
+                  key={index}
+                  className="btn bg-orange btn-circle hover:bg-base-300 border-none hover:text-orange"
+                  href={social.href}
+                  aria-label={social.label}
+                >
                   <i className={`bi ${social.icon} text-xl`}></i>
                 </a>
               ))}

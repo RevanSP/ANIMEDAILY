@@ -44,7 +44,7 @@ export default function Home() {
         <meta name="robots" content="index, follow" />
         <meta property="og:title" content="ANIMEDAILY - Your Daily Anime Source" />
         <meta property="og:description" content="Stay updated with the latest anime news, reviews, and articles at ANIMEDAILY." />
-        <meta property="og:image" content="https://animedaily.vercel.app/favicon.png" />
+        <meta property="og:image" content="https://animedaily.vercel.app/favicon.avif" />
         <meta property="og:url" content="https://animedaily.vercel.app" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="language" content="en" />
@@ -60,7 +60,7 @@ export default function Home() {
                   <div className="bg-orange rounded-full p-6 inline-block mb-4">
                     <i className={`bi ${feature.icon} text-5xl`}></i>
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                  <h1 className="text-xl font-semibold mb-2">{feature.title}</h1>
                   <p className="text-gray-600">{feature.description}</p>
                 </div>
               ))}

@@ -124,7 +124,7 @@ const LibraryPage = () => {
         <meta name="robots" content="index, follow" />
         <meta property="og:title" content="Your Library - ANIMEDAILY" />
         <meta property="og:description" content="Manage and explore your personal anime collection with ease on ANIMEDAILY's library page." />
-        <meta property="og:image" content="https://animedaily.vercel.app/favicon.png" />
+        <meta property="og:image" content="https://animedaily.vercel.app/favicon.avif" />
         <meta property="og:url" content="https://animedaily.vercel.app/library" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="language" content="en" />
@@ -180,6 +180,7 @@ const LibraryPage = () => {
                 }}
                 className={`btn btn-sm btn-square bg-orange hover:bg-base-300 hover:text-orange ${isDeleteButtonEnabled ? '' : 'btn-disabled'}`}
                 disabled={!isDeleteButtonEnabled}
+                aria-label="Delete selected items"
               >
                 <i className="bi bi-x-circle"></i>
               </button>
@@ -189,16 +190,13 @@ const LibraryPage = () => {
                 <thead>
                   <tr>
                     <th>
-                      <div className="form-control">
-                        <label className="cursor-pointer label">
-                          <input
-                            type="checkbox"
-                            checked={selectAll}
-                            onChange={handleSelectAllChange}
-                            className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
-                          />
-                        </label>
-                      </div>
+                      <label for="checkbox-header" class="sr-only">Select All</label>
+                      <input id="checkbox-header"
+                        type="checkbox"
+                        checked={selectAll}
+                        onChange={handleSelectAllChange}
+                        className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
+                      />
                     </th>
                     <th>TITLE</th>
                     <th>ACTION</th>
@@ -244,16 +242,13 @@ const LibraryPage = () => {
                 <tfoot>
                   <tr>
                     <th>
-                      <div className="form-control">
-                        <label className="cursor-pointer label">
-                          <input
-                            type="checkbox"
-                            checked={selectAll}
-                            onChange={handleSelectAllChange}
-                            className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
-                          />
-                        </label>
-                      </div>
+                      <label for="checkbox-footer" class="sr-only">Footer Checkbox</label>
+                      <input id="checkbox-footer"
+                        type="checkbox"
+                        checked={selectAll}
+                        onChange={handleSelectAllChange}
+                        className="checkbox [--chkbg:theme(colors.orange)] checkbox-xs bg-base-300"
+                      />
                     </th>
                     <th>TITLE</th>
                     <th>ACTION</th>
