@@ -3,6 +3,7 @@ import { db, collection, getDocs, deleteDoc, doc, addDoc, updateDoc } from "../.
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { BsBuildings, BsCameraReels, BsCheckCircle, BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsCloudUpload, BsExclamationDiamond, BsExclamationOctagon, BsExclamationTriangle, BsFileEarmarkPlay, BsHourglassSplit, BsImage, BsPencilSquare, BsPlusCircle, BsSearch, BsTrash2, BsTypeH1, BsTypeH2, BsTypeH3, BsXCircle, BsXOctagon } from "react-icons/bs";
+import { FullscreenModal } from "@/components/FullscreenModal";
 
 export default function Dashboard() {
   const [animeData, setAnimeData] = useState([]);
@@ -232,7 +233,8 @@ export default function Dashboard() {
 
   const [episodes, setEpisodes] = useState([{ title: '', iframeSrc: '' }]);
 
-  const handleChange = (e, field) => setEditAnimeDetails(prev => ({ ...prev, [field]: e.target.value || '' }));
+  const handleAddChange = (e, field) => setAnimeDetails(prev => ({ ...prev, [field]: e.target.value || '' }));
+  const handleEditChange = (e, field) => setEditAnimeDetails(prev => ({ ...prev, [field]: e.target.value || '' }));
 
   const handleEpisodeChange = (e, index, field) => setEpisodes(prev => {
     const updated = [...prev];
@@ -400,233 +402,218 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <dialog id="edit_anime" className="modal" open={isModalOpen}>
-        <div className="modal-box border-orange border-2 rounded-lg w-11/12 max-w-full">
-          <form method="dialog">
-            <button
-              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-              onClick={closeModal}
-            >
-              ✕
-            </button>
-          </form>
-          <h3 className="font-bold text-lg mb-4">EDIT ANIME</h3>
-
-          <form onSubmit={handleEditSubmit}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              {[{ icon: <BsTypeH1 />, placeholder: "TITLE", value: editAnimeDetails.title, field: "title" },
-              { icon: <BsImage />, placeholder: "COVER IMG", value: editAnimeDetails.coverImg, field: "coverImg" },
-              { icon: <BsTypeH2 />, placeholder: "ALT TITLE", value: editAnimeDetails.altTitle, field: "altTitle" },
-              { icon: <BsTypeH3 />, placeholder: "ALT TITLE (JAPANESE)", value: editAnimeDetails.altTitleJapanese, field: "altTitleJapanese" },
-              { icon: <BsExclamationOctagon />, placeholder: "STATUS", value: editAnimeDetails.status, field: "status" },
-              { icon: <BsBuildings />, placeholder: "STUDIO", value: editAnimeDetails.studio, field: "studio" },
-              { icon: <BsHourglassSplit />, placeholder: "DURATION", value: editAnimeDetails.duration, field: "duration" },
-              { icon: <BsExclamationTriangle />, placeholder: "SEASON", value: editAnimeDetails.season, field: "season" },
-              { icon: <BsExclamationDiamond />, placeholder: "TYPE", value: editAnimeDetails.type, field: "type" },
-              { icon: <BsFileEarmarkPlay />, placeholder: "TOTAL EPISODE", value: editAnimeDetails.totalEpisodes, field: "totalEpisodes" }].map((field, index) => (
-                <label key={index} className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-200 input-sm">
-                  {field.icon}
-                  <input
-                    type="text"
-                    className="grow text-xs"
-                    placeholder={field.placeholder}
-                    value={field.value || ''}
-                    onChange={(e) => handleChange(e, field.field)}
-                    required
-                  />
-                </label>
-              ))}
-            </div>
-            <label className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-200 mb-4 input-sm">
-              <BsCameraReels className="text-xs" />
-              <input
-                type="text"
-                className="grow text-xs"
-                placeholder="GENRE"
-                value={editAnimeDetails.genre || ''}
-                onChange={(e) => handleChange(e, "genre")}
-                required
-              />
-            </label>
-            <textarea
-              className="textarea textarea-bordered text-xs border-2 border-orange bg-base-200 w-full mb-2"
-              placeholder="SYNOPSIS"
-              value={editAnimeDetails.sinopsis || ''}
-              onChange={(e) => handleChange(e, "sinopsis")}
-              required
-              rows={7}
-            ></textarea>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {editEpisodes.map((episode, index) => (
-                <div key={index} className="join w-full">
-                  <input
-                    className="input input-bordered join-item border-2 border-orange bg-base-200 w-full input-sm"
-                    placeholder="TITLE EPISODE"
-                    type="text"
-                    value={episode.title || ''}
-                    onChange={(e) => handleEpisodeEditChange(e, index, "title")}
-                    required
-                  />
-                  <input
-                    className="input input-bordered join-item border-2 border-orange bg-base-200 w-36 input-sm"
-                    placeholder="IFRAME SOURCE VIDEO"
-                    type="url"
-                    value={episode.iframeSrc || ''}
-                    onChange={(e) => handleEpisodeEditChange(e, index, "iframeSrc")}
-                    required
-                  />
-                  <button
-                    className="btn join-item border-2 border-orange btn-sm btn-square bg-orange hover:bg-base-300 hover:text-orange"
-                    onClick={(e) => handleEpisodeRemove(e, index)}
-                  >
-                    <BsXOctagon className="text-xs" />
-                  </button>
-                </div>
-              ))}
-            </div>
-            <div className="modal-action">
-              <div className="join">
-                <button
-                  className="btn btn-sm bg-orange hover:bg-base-300 hover:text-orange rounded-lg join-item"
-                  type="button"
-                  onClick={addEpisodes}
-                >
-                  ADD EPISODE
-                </button>
-                <button
-                  className="btn btn-sm bg-orange hover:bg-base-300 hover:text-orange rounded-lg join-item"
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <span className="loading loading-spinner loading-xs"></span>
-                  ) : (
-                    "SUBMIT"
-                  )}
-                </button>
-              </div>
-            </div>
-          </form>
-
-        </div>
-      </dialog>
-      <dialog id="add_anime" className="modal">
-        <div className="modal-box border-orange border-2 rounded-lg w-11/12 max-w-full">
-          <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-          </form>
-          <h3 className="font-bold text-lg mb-4">ADD ANIME</h3>
-          <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              {[
-                { label: "TITLE", icon: <BsTypeH1 />, field: "title", type: "text" },
-                { label: "COVER IMG", icon: <BsImage />, field: "coverImg", type: "url" },
-                { label: "ALT TITLE", icon: <BsTypeH2 />, field: "altTitle", type: "text" },
-                { label: "ALT TITLE (JAPANESE)", icon: <BsTypeH3 />, field: "altTitleJapanese", type: "text" },
-                { label: "STATUS", icon: <BsExclamationOctagon />, field: "status", type: "text" },
-                { label: "STUDIO", icon: <BsBuildings />, field: "studio", type: "text" },
-                { label: "DURATION", icon: <BsHourglassSplit />, field: "duration", type: "text" },
-                { label: "SEASON", icon: <BsExclamationTriangle />, field: "season", type: "text" },
-                { label: "TYPE", icon: <BsExclamationDiamond />, field: "type", type: "text" },
-              ].map(({ label, icon, field, type }) => (
-                <label key={field} className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-200 input-sm">
-                  {icon}
-                  <input
-                    type={type}
-                    className="grow text-xs"
-                    placeholder={label}
-                    value={animeDetails[field]}
-                    onChange={(e) => handleChange(e, field)}
-                    required
-                  />
-                </label>
-              ))}
-              <label className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-200 input-sm">
-                <BsFileEarmarkPlay className="text-xs" />
+      <FullscreenModal id="edit_anime"
+        title="EDIT ANIME"
+      >
+        <form onSubmit={handleEditSubmit}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-4">
+            {[{ icon: <BsTypeH1 />, placeholder: "TITLE", value: editAnimeDetails.title, field: "title" },
+            { icon: <BsImage />, placeholder: "COVER IMG", value: editAnimeDetails.coverImg, field: "coverImg" },
+            { icon: <BsTypeH2 />, placeholder: "ALT TITLE", value: editAnimeDetails.altTitle, field: "altTitle" },
+            { icon: <BsTypeH3 />, placeholder: "ALT TITLE (JAPANESE)", value: editAnimeDetails.altTitleJapanese, field: "altTitleJapanese" },
+            { icon: <BsExclamationOctagon />, placeholder: "STATUS", value: editAnimeDetails.status, field: "status" },
+            { icon: <BsBuildings />, placeholder: "STUDIO", value: editAnimeDetails.studio, field: "studio" },
+            { icon: <BsHourglassSplit />, placeholder: "DURATION", value: editAnimeDetails.duration, field: "duration" },
+            { icon: <BsExclamationTriangle />, placeholder: "SEASON", value: editAnimeDetails.season, field: "season" },
+            { icon: <BsExclamationDiamond />, placeholder: "TYPE", value: editAnimeDetails.type, field: "type" },
+            { icon: <BsFileEarmarkPlay />, placeholder: "TOTAL EPISODE", value: editAnimeDetails.totalEpisodes, field: "totalEpisodes" }].map((field, index) => (
+              <label key={index} className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-200 input-sm">
+                {field.icon}
                 <input
                   type="text"
                   className="grow text-xs"
-                  placeholder="TOTAL EPISODE"
-                  value={animeDetails.totalEpisodes}
-                  onChange={(e) => handleChange(e, "totalEpisodes")}
+                  placeholder={field.placeholder}
+                  value={field.value || ''}
+                  onChange={(e) => handleEditChange(e, field.field)}
                   required
                 />
               </label>
+            ))}
+          </div>
+          <label className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-300 mb-4 input-sm">
+            <BsCameraReels className="text-xs" />
+            <input
+              type="text"
+              className="grow text-xs"
+              placeholder="GENRE"
+              value={editAnimeDetails.genre || ''}
+              onChange={(e) => handleEditChange(e, "genre")}
+              required
+            />
+          </label>
+          <textarea
+            className="textarea textarea-bordered text-xs border-2 border-orange bg-base-300 w-full mb-2"
+            placeholder="SYNOPSIS"
+            value={editAnimeDetails.sinopsis || ''}
+            onChange={(e) => handleEditChange(e, "sinopsis")}
+            required
+            rows={7}
+          ></textarea>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {editEpisodes.map((episode, index) => (
+              <div key={index} className="join w-full">
+                <input
+                  className="input input-bordered join-item border-2 border-orange bg-base-300 w-full input-sm"
+                  placeholder="TITLE EPISODE"
+                  type="text"
+                  value={episode.title || ''}
+                  onChange={(e) => handleEpisodeEditChange(e, index, "title")}
+                  required
+                />
+                <input
+                  className="input input-bordered join-item border-2 border-orange bg-base-300 w-36 input-sm"
+                  placeholder="IFRAME SOURCE VIDEO"
+                  type="url"
+                  value={episode.iframeSrc || ''}
+                  onChange={(e) => handleEpisodeEditChange(e, index, "iframeSrc")}
+                  required
+                />
+                <button
+                  className="btn join-item border-2 border-orange btn-sm btn-square bg-orange hover:bg-base-300 hover:text-orange"
+                  onClick={(e) => handleEpisodeRemove(e, index)}
+                >
+                  <BsXOctagon className="text-xs" />
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="modal-action mb-4">
+            <div className="join">
+              <button
+                className="btn btn-sm bg-orange hover:bg-base-300 hover:text-orange rounded-lg join-item"
+                type="button"
+                onClick={addEpisodes}
+              >
+                ADD EPISODE
+              </button>
+              <button
+                className="btn btn-sm bg-orange hover:bg-base-300 hover:text-orange rounded-lg join-item"
+                type="submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <span className="loading loading-spinner loading-xs"></span>
+                ) : (
+                  "SUBMIT"
+                )}
+              </button>
             </div>
-            <label className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-200 mb-4 input-sm">
-              <BsCameraReels className="text-xs" />
+          </div>
+        </form>
+      </FullscreenModal>
+      <FullscreenModal id="add_anime"
+        title="ADD ANIME"
+      >
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 my-4">
+            {[
+              { label: "TITLE", icon: <BsTypeH1 />, field: "title", type: "text" },
+              { label: "COVER IMG", icon: <BsImage />, field: "coverImg", type: "url" },
+              { label: "ALT TITLE", icon: <BsTypeH2 />, field: "altTitle", type: "text" },
+              { label: "ALT TITLE (JAPANESE)", icon: <BsTypeH3 />, field: "altTitleJapanese", type: "text" },
+              { label: "STATUS", icon: <BsExclamationOctagon />, field: "status", type: "text" },
+              { label: "STUDIO", icon: <BsBuildings />, field: "studio", type: "text" },
+              { label: "DURATION", icon: <BsHourglassSplit />, field: "duration", type: "text" },
+              { label: "SEASON", icon: <BsExclamationTriangle />, field: "season", type: "text" },
+              { label: "TYPE", icon: <BsExclamationDiamond />, field: "type", type: "text" },
+            ].map(({ label, icon, field, type }) => (
+              <label key={field} className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-300 input-sm">
+                {icon}
+                <input
+                  type={type}
+                  className="grow text-xs"
+                  placeholder={label}
+                  value={animeDetails[field]}
+                  onChange={(e) => handleAddChange(e, field)}
+                  required
+                />
+              </label>
+            ))}
+            <label className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-300 input-sm">
+              <BsFileEarmarkPlay className="text-xs" />
               <input
                 type="text"
                 className="grow text-xs"
-                placeholder="GENRE"
-                value={animeDetails.genre}
-                onChange={(e) => handleChange(e, "genre")}
+                placeholder="TOTAL EPISODE"
+                value={animeDetails.totalEpisodes}
+                onChange={(e) => handleAddChange(e, "totalEpisodes")}
                 required
               />
             </label>
-            <textarea
-              className="textarea textarea-bordered text-xs border-2 border-orange bg-base-200 w-full mb-2"
-              placeholder="SYNOPSIS"
-              value={animeDetails.sinopsis}
-              onChange={(e) => handleChange(e, "sinopsis")}
+          </div>
+          <label className="input input-bordered flex items-center gap-2 border-2 border-orange bg-base-300 mb-4 input-sm">
+            <BsCameraReels className="text-xs" />
+            <input
+              type="text"
+              className="grow text-xs"
+              placeholder="GENRE"
+              value={animeDetails.genre}
+              onChange={(e) => handleAddChange(e, "genre")}
               required
-              rows={7}
-            ></textarea>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {episodes.map((episode, index) => (
-                <div key={index} className="join w-full">
-                  <input
-                    className="input input-bordered join-item border-2 border-orange bg-base-200 w-full input-sm"
-                    placeholder={`EPISODE ${index + 1}`}
-                    type="text"
-                    value={episode.title}
-                    onChange={(e) => handleEpisodeChange(e, index, 'title')}
-                    required
-                  />
-                  <input
-                    className="input input-bordered join-item border-2 border-orange bg-base-200 w-36 input-sm"
-                    placeholder="IFRAME SOURCE VIDEO"
-                    type="url"
-                    value={episode.iframeSrc}
-                    onChange={(e) => handleEpisodeChange(e, index, 'iframeSrc')}
-                    required
-                  />
-                  {index > 0 && (
-                    <button
-                      className="btn join-item border-2 border-orange btn-sm btn-square bg-orange hover:bg-base-300 hover:text-orange"
-                      type="button"
-                      onClick={() => removeEpisode(index)}
-                    >
-                      <BsXOctagon className="text-xs" />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="modal-action">
-              <div className="join">
-                <button
-                  className="btn btn-sm bg-orange hover:bg-base-300 hover:text-orange rounded-lg join-item"
-                  type="button"
-                  onClick={addEpisode}
-                >
-                  ADD EPISODE
-                </button>
-                <button
-                  className="btn btn-sm bg-orange hover:bg-base-300 hover:text-orange rounded-lg join-item"
-                  type="submit"
-                >
-                  {isSubmitting ? (
-                    <span className="loading loading-spinner loading-xs"></span>
-                  ) : (
-                    "SUBMIT"
-                  )}
-                </button>
+            />
+          </label>
+          <textarea
+            className="textarea textarea-bordered text-xs border-2 border-orange bg-base-300 w-full mb-2"
+            placeholder="SYNOPSIS"
+            value={animeDetails.sinopsis}
+            onChange={(e) => handleAddChange(e, "sinopsis")}
+            required
+            rows={7}
+          ></textarea>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {episodes.map((episode, index) => (
+              <div key={index} className="join w-full">
+                <input
+                  className="input input-bordered join-item border-2 border-orange bg-base-300 w-full input-sm"
+                  placeholder={`EPISODE ${index + 1}`}
+                  type="text"
+                  value={episode.title}
+                  onChange={(e) => handleEpisodeChange(e, index, 'title')}
+                  required
+                />
+                <input
+                  className="input input-bordered join-item border-2 border-orange bg-base-300 w-36 input-sm"
+                  placeholder="IFRAME SOURCE VIDEO"
+                  type="url"
+                  value={episode.iframeSrc}
+                  onChange={(e) => handleEpisodeChange(e, index, 'iframeSrc')}
+                  required
+                />
+                {index > 0 && (
+                  <button
+                    className="btn join-item border-2 border-orange btn-sm btn-square bg-orange hover:bg-base-300 hover:text-orange"
+                    type="button"
+                    onClick={() => removeEpisode(index)}
+                  >
+                    <BsXOctagon className="text-xs" />
+                  </button>
+                )}
               </div>
+            ))}
+          </div>
+          <div className="modal-action mb-4">
+            <div className="join">
+              <button
+                className="btn btn-sm bg-orange hover:bg-base-300 hover:text-orange rounded-lg join-item"
+                type="button"
+                onClick={addEpisode}
+              >
+                ADD EPISODE
+              </button>
+              <button
+                className="btn btn-sm bg-orange hover:bg-base-300 hover:text-orange rounded-lg join-item"
+                type="submit"
+              >
+                {isSubmitting ? (
+                  <span className="loading loading-spinner loading-xs"></span>
+                ) : (
+                  "SUBMIT"
+                )}
+              </button>
             </div>
-          </form>
-        </div>
-      </dialog>
+          </div>
+        </form>
+      </FullscreenModal>
       <dialog id="delete_confirm" className="modal">
         <div className="modal-box border-orange border-2 rounded-lg">
           <form method="dialog">

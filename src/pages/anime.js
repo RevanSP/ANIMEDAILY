@@ -5,6 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { db, collection, getDocs } from "@/lib/firebase";
 import Head from "next/head";
 import { BsArrowClockwise, BsBookmark, BsBookmarkFill, BsCheckCircle, BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsInfoCircle, BsSearch } from "react-icons/bs";
+import { FullscreenModal } from "@/components/FullscreenModal";
 
 const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
   useAOS();
@@ -35,7 +36,7 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
   useEffect(() => {
     const handleResize = () => {
       const isMobile = window.innerWidth < 768;
-      setItemsPerPage(isMobile ? 18 : 21);
+      setItemsPerPage(isMobile ? 8 : 14);
       setMaxPageButtons(isMobile ? 5 : 15);
     };
 
@@ -279,6 +280,13 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
     return () => modal?.removeEventListener('close', handleDialogClose);
   }, []);
 
+  const openModal = (modalId) => {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.showModal();
+    }
+  };
+
   return (
     <>
       <Head>
@@ -295,100 +303,99 @@ const AnimePage = ({ initialAnimeData, defaultItemsPerPage }) => {
         <link rel="canonical" href="https://animedaily.vercel.app/anime" />
       </Head>
       <Layout>
-        <dialog id="animes" className="modal">
-          <div className="modal-box border-orange border-2 rounded-lg w-11/12 max-w-full p-4">
-            <form method="dialog">
-              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-orange">✕</button>
-            </form>
-            {selectedAnime && (
-              <>
-                <h3 className="font-bold text-lg mb-4 text-orange">
-                  {selectedAnime.title ||
-                    selectedAnime.infoItems?.find(item => item.startsWith("Judul:"))?.split(":")[1]?.trim() ||
-                    selectedAnime.infoItems?.find(item => item.startsWith("Japanese:"))?.split(":")[1]?.trim()}
-                </h3>
-                <div className="flex flex-col lg:flex-row gap-4">
-                  <div className="flex-1 bg-base-300 p-3 rounded-lg">
-                    <div className="relative w-full pt-[56.25%]">
-                      {selectedAnime.episodes && selectedAnime.episodes.length > 0 ? (
-                        <iframe
-                          ref={iframeRef}
-                          src={selectedAnime.episodes[selectedEpisodeIndex]?.iframeSrc}
-                          frameBorder="0"
-                          allowFullScreen
-                          className="absolute top-0 left-0 w-full h-full rounded-lg"
-                        ></iframe>
-                      ) : (
-                        <div className="absolute top-0 left-0 w-full h-full rounded-lg bg-base-100 flex items-center justify-center">
-                          <p className="text-orange">No episodes available</p>
-                        </div>
-                      )}
-                    </div>
-                    <select
-                      className="select select-bordered w-full mt-3 rounded-lg border-none bg-base-100 text-orange"
-                      value={selectedEpisodeIndex}
-                      onChange={handleEpisodeChange}
-                    >
-                      <option disabled>Select Episode</option>
-                      {selectedAnime.episodes?.map((episode, index) => (
-                        <option key={index} value={index}>
-                          Episode {selectedAnime.episodes.length - index}
-                        </option>
-                      ))}
-                    </select>
+        <FullscreenModal
+          id="animes"
+          title={
+            selectedAnime?.title ||
+            selectedAnime?.infoItems?.find(item => item.startsWith("Judul:"))?.split(":")[1]?.trim() ||
+            selectedAnime?.infoItems?.find(item => item.startsWith("Japanese:"))?.split(":")[1]?.trim() ||
+            "No Title"
+          }
+        >
+          {selectedAnime && (
+            <>
+              <div className="flex flex-col lg:flex-row gap-4 my-4">
+                <div className="flex-[2] bg-base-300 p-3 rounded-lg">
+                  <div className="relative w-full pt-[56.25%]">
+                    {selectedAnime.episodes && selectedAnime.episodes.length > 0 ? (
+                      <iframe
+                        ref={iframeRef}
+                        src={selectedAnime.episodes[selectedEpisodeIndex]?.iframeSrc}
+                        frameBorder="0"
+                        allowFullScreen
+                        className="absolute top-0 left-0 w-full h-full rounded-lg"
+                      ></iframe>
+                    ) : (
+                      <div className="absolute top-0 left-0 w-full h-full rounded-lg bg-base-100 flex items-center justify-center">
+                        <p className="text-orange">No episodes available</p>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex-1 bg-base-300 p-4 rounded-lg">
-                    <div className="flex">
-                      <div className="w-32 h-48 flex-shrink-0 relative">
-                        <Image unoptimized
-                          src={selectedAnime.coverImg}
-                          alt="Cover"
-                          fill
-                          sizes="100vw"
-                          className="rounded-lg border-2 border-orange object-cover"
-                        />
-                      </div>
-                      <div className="ml-4 flex flex-col flex-1 overflow-y-auto">
-                        <p className="text-xs sm:text-sm">
-                          STATUS : {selectedAnime.infoItems?.find(item => item.startsWith("Status:"))?.split(":")[1]?.trim() || "-"}
-                        </p>
-                        <p className="text-xs sm:text-sm mt-1">
-                          DURATION : {selectedAnime.infoItems?.find(item => item.startsWith("Durasi:"))?.split(":")[1]?.trim() || "-"}
-                        </p>
-                        <p className="text-xs sm:text-sm mt-1">
-                          SEASON : {selectedAnime.infoItems?.find(item => item.startsWith("Season:"))?.split(":")[1]?.trim() || "-"}
-                        </p>
-                        <p className="text-xs sm:text-sm mt-1">
-                          TYPE : {selectedAnime.infoItems?.find(item => item.startsWith("Tipe:"))?.split(":")[1]?.trim() || "-"}
-                        </p>
-                        <p className="text-xs sm:text-sm mt-1">
-                          EPISODE : {selectedAnime.infoItems?.find(item => item.startsWith("Episodes:"))?.split(":")[1]?.trim() || "-"}
-                        </p>
-                        <p className="text-xs sm:text-sm mt-1 mb-1">GENRE :</p>
-                        <div className="flex flex-wrap gap-1">
-                          {selectedAnime.infoItems
-                            ?.find(item => item.startsWith("Genre:"))
-                            ?.split(":")[1]
-                            ?.trim()
-                            ?.split(", ")
-                            .map((genre, index) => (
-                              <div key={index} className="badge uppercase badge-xs p-2 rounded-lg text-xs bg-orange">
-                                {genre}
-                              </div>
-                            )) || <div className="badge uppercase rounded-lg text-xs bg-gray-400">-</div>}
-                        </div>
+                  <select
+                    className="select select-bordered w-full mt-3 rounded-lg border-none bg-base-100 text-orange"
+                    value={selectedEpisodeIndex}
+                    onChange={handleEpisodeChange}
+                  >
+                    <option disabled>Select Episode</option>
+                    {selectedAnime.episodes?.map((episode, index) => (
+                      <option key={index} value={index}>
+                        Episode {selectedAnime.episodes.length - index}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex-1 bg-base-300 p-4 rounded-lg">
+                  <div className="flex">
+                    <div className="w-32 h-48 flex-shrink-0 relative">
+                      <Image
+                        unoptimized
+                        src={selectedAnime.coverImg}
+                        alt="Cover"
+                        fill
+                        sizes="100vw"
+                        className="rounded-lg border-2 border-orange object-cover"
+                      />
+                    </div>
+                    <div className="ml-4 flex flex-col flex-1 overflow-y-auto">
+                      <p className="text-xs sm:text-sm">
+                        STATUS : {selectedAnime.infoItems?.find(item => item.startsWith("Status:"))?.split(":")[1]?.trim() || "-"}
+                      </p>
+                      <p className="text-xs sm:text-sm mt-1">
+                        DURATION : {selectedAnime.infoItems?.find(item => item.startsWith("Durasi:"))?.split(":")[1]?.trim() || "-"}
+                      </p>
+                      <p className="text-xs sm:text-sm mt-1">
+                        SEASON : {selectedAnime.infoItems?.find(item => item.startsWith("Season:"))?.split(":")[1]?.trim() || "-"}
+                      </p>
+                      <p className="text-xs sm:text-sm mt-1">
+                        TYPE : {selectedAnime.infoItems?.find(item => item.startsWith("Tipe:"))?.split(":")[1]?.trim() || "-"}
+                      </p>
+                      <p className="text-xs sm:text-sm mt-1">
+                        EPISODE : {selectedAnime.infoItems?.find(item => item.startsWith("Episodes:"))?.split(":")[1]?.trim() || "-"}
+                      </p>
+                      <p className="text-xs sm:text-sm mt-1 mb-1">GENRE :</p>
+                      <div className="flex flex-wrap gap-1">
+                        {selectedAnime.infoItems
+                          ?.find(item => item.startsWith("Genre:"))
+                          ?.split(":")[1]
+                          ?.trim()
+                          ?.split(", ")
+                          .map((genre, index) => (
+                            <div key={index} className="badge uppercase badge-xs p-2 rounded-lg text-xs bg-orange">
+                              {genre}
+                            </div>
+                          )) || <div className="badge uppercase rounded-lg text-xs bg-gray-400">-</div>}
                       </div>
                     </div>
-                    <div className="mt-4">
-                      <p className="text-sm">SYNOPSIS :</p>
-                      <p className="text-xs ">{selectedAnime.sinopsis}</p>
-                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <p className="text-sm">SYNOPSIS :</p>
+                    <p className="text-xs">{selectedAnime.sinopsis}</p>
                   </div>
                 </div>
-              </>
-            )}
-          </div>
-        </dialog>
+              </div>
+            </>
+          )}
+        </FullscreenModal>
         <section className="py-8 mt-14">
           <div className="mx-auto px-6">
             <div className="mb-3 lg:px-6">
