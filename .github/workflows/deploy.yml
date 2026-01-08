@@ -1,0 +1,120 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Set BASE_PATH env
+        run: |
+          echo "BASE_PATH=/${GITHUB_REPOSITORY#*/}/" >> $GITHUB_ENV
+          echo "GITHUB_REPOSITORY=$GITHUB_REPOSITORY" >> $GITHUB_ENV
+          
+      - name: Debug environment
+        run: |
+          echo "BASE_PATH: $BASE_PATH"
+          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "Repository name: ${GITHUB_REPOSITORY#*/}"
+          
+      - name: Check package.json scripts
+        run: |
+          echo "Package.json scripts:"
+          cat package.json | grep -A 10 '"scripts"'
+          
+      - name: Build project
+        run: |
+          echo "Starting build..."
+          echo "Current directory: $(pwd)"
+          echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
+          npm run build 2>&1 || echo "Build failed with exit code: $?"
+          echo "Build process finished"
+          
+      - name: List files after build
+        run: |
+          echo "=== Root directory contents ==="
+          ls -lah
+          echo ""
+          echo "=== Looking for build output directories ==="
+          find . -maxdepth 2 -type d -name "*dist*" -o -name "*build*" -o -name "*out*" 2>/dev/null || echo "No build output directories found"
+          echo ""
+          echo "=== All files in project ==="
+          find . -maxdepth 2 -type f | head -20
+          echo ""
+          echo "=== Checking for package.json ==="
+          cat package.json 2>/dev/null || echo "package.json not found"
+          
+      - name: Deploy to GitHub Pages
+        run: |
+          echo "=== Checking for build output ==="
+          
+          # Check for various possible output directories
+          if [ -d "dist" ]; then
+            OUTPUT_DIR="dist"
+          elif [ -d "build" ]; then
+            OUTPUT_DIR="build"  
+          elif [ -d "out" ]; then
+            OUTPUT_DIR="out"
+          else
+            echo "Error: No build output directory found!"
+            echo "Available directories:"
+            ls -la
+            echo "=== This usually means one of these issues ==="
+            echo "1. Missing index.html in project root"
+            echo "2. Build script failed silently"
+            echo "3. Wrong build command in package.json"
+            echo "4. Missing React dependencies"
+            exit 1
+          fi
+          
+          echo "Using output directory: $OUTPUT_DIR"
+          echo "Contents of $OUTPUT_DIR:"
+          ls -la "$OUTPUT_DIR"
+          
+          # Copy build output to a temporary location before switching branches
+          cp -r "$OUTPUT_DIR" /tmp/build-output
+          echo "Copied build files to temporary location"
+          ls -la /tmp/build-output
+          
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git fetch origin gh-pages || true
+          git switch gh-pages || git checkout --orphan gh-pages
+          
+          # Clear existing files (but keep .git)
+          find . -maxdepth 1 ! -name '.git' ! -name '.' -exec rm -rf {} +
+          
+          # Copy files from temporary location
+          cp -r /tmp/build-output/* .
+          
+          touch .nojekyll
+          
+          echo "Files copied to gh-pages branch:"
+          ls -la
+          
+          git add .
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Deploy to GitHub Pages"
+            git push origin gh-pages --force
+          fi
