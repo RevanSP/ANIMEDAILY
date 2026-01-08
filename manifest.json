@@ -1,0 +1,21 @@
+{
+    "short_name": "ANIMEDAILY.",
+    "name": "ANIMEDAILY. - Watch your favorite anime",
+    "icons": [
+      {
+        "src": "/favicon.avif",
+        "sizes": "192x192",
+        "type": "image/avif"
+      },
+      {
+        "src": "/favicon.avif",
+        "sizes": "512x512",
+        "type": "image/avif"
+      }
+    ],
+    "start_url": "/",
+    "background_color": "#ffffff",
+    "theme_color": "#F47521",
+    "display": "fullscreen",
+    "scope": "/"
+  }
