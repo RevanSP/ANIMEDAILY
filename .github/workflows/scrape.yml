@@ -1,62 +1,48 @@
-name: Scrape Anime List
+name: Scrape Anime List (Go + chromedp)
 
 on:
   workflow_dispatch:
 
 jobs:
-  count-batches:
-    runs-on: ubuntu-latest
-    outputs:
-      total-batches: ${{ steps.set.outputs.total }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-      - name: Count total batches
-        id: set
-        run: |
-          # jika mau otomatis, bisa ambil jumlah anime dari index.js
-          # tapi sekarang kita set manual saja
-          echo "total=2" >> $GITHUB_OUTPUT
-
   scrape:
-    needs: count-batches
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        batch: [0, 1] 
-      max-parallel: 2
+        batch: [0, 1]
       fail-fast: false
+    env:
+      TZ: "Asia/Jakarta"
+      CHROME_BIN: /usr/bin/google-chrome
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: 🧩 Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: 🧠 Setup Go
+        uses: actions/setup-go@v5
         with:
-          node-version: '20'
+          go-version: "1.22"
 
-      - name: Install dependencies
+      - name: 🧰 Install Chrome
         run: |
-          cd project-react
-          npm ci
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
 
-      - name: Run scraping batch ${{ matrix.batch }}
+      - name: 📦 Install dependencies
+        run: go mod tidy
+
+      - name: 🕸️ Run scraper batch ${{ matrix.batch }}
         env:
           BATCH_INDEX: ${{ matrix.batch }}
           BATCH_SIZE: 10
         run: |
-          cd project-react
-          echo "Running scraping batch $BATCH_INDEX ..."
-          node scrape/index.js
-        continue-on-error: true
+          go run main.go
 
-      - name: Upload batch artifact
-        uses: actions/upload-artifact@v3
+      - name: 💾 Upload batch result
+        uses: actions/upload-artifact@v4
         with:
           name: anime-data-batch-${{ matrix.batch }}
-          path: src/data/anime.json
+          path: public/anime.json
           retention-days: 1
 
   combine:
@@ -64,77 +50,37 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download batch artifacts
-        uses: actions/download-artifact@v3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
           path: artifacts
           pattern: anime-data-batch-*
 
-      - name: Combine JSON batches
+      - name: Combine JSON files
         run: |
           node -e "
-          const fs = require('fs');
-          const path = require('path');
-
-          const allData = [];
-          const seen = new Set();
-          const artifactsDir = './artifacts';
-
-          if (fs.existsSync(artifactsDir)) {
-            fs.readdirSync(artifactsDir).forEach(file => {
-              if (file.endsWith('.json')) {
-                try {
-                  const data = JSON.parse(fs.readFileSync(path.join(artifactsDir, file), 'utf8'));
-                  data.forEach(anime => {
-                    const key = anime.title + (anime.url || '');
-                    if (!seen.has(key)) {
-                      seen.add(key);
-                      allData.push(anime);
-                    }
-                  });
-                } catch(e) { console.error('Error parsing', file, e.message); }
+          const fs = require('fs'), path = require('path');
+          const out = [], seen = new Set();
+          for (const dir of fs.readdirSync('artifacts')) {
+            for (const f of fs.readdirSync(path.join('artifacts', dir))) {
+              if (f.endsWith('.json')) {
+                const data = JSON.parse(fs.readFileSync(path.join('artifacts', dir, f), 'utf8'));
+                data.forEach(anime => {
+                  const key = anime.title + anime.url;
+                  if (!seen.has(key)) { seen.add(key); out.push(anime); }
+                });
               }
-            });
+            }
           }
-
-          const dataDir = '/src/data';
-          fs.mkdirSync(dataDir, { recursive: true });
-          const outputFile = path.join(dataDir, 'anime.json');
-          fs.writeFileSync(outputFile, JSON.stringify(allData, null, 2));
-          console.log('Total anime scraped:', allData.length);
+          fs.mkdirSync('public', {recursive:true});
+          fs.writeFileSync('public/anime.json', JSON.stringify(out, null, 2));
+          console.log('✅ Combined', out.length, 'anime entries');
           "
 
-      - name: Commit and push combined JSON
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add src/data/anime.json
-
-          max_retries=5
-          retry_count=0
-          while [ $retry_count -lt $max_retries ]; do
-            if git diff --quiet && git diff --staged --quiet; then
-              echo "No changes to commit"
-              exit 0
-            fi
-
-            git commit -m "Update anime.json - $(date +'%Y-%m-%d %H:%M')" || true
-            git pull --rebase origin main || { retry_count=$((retry_count + 1)); sleep $((retry_count * 2)); continue; }
-            if git push origin main; then
-              echo "Push successful"
-              exit 0
-            else
-              echo "Push failed, retry $((retry_count + 1))/$max_retries"
-              retry_count=$((retry_count + 1))
-              sleep $((retry_count * 2))
-            fi
-          done
-          echo "Failed to push after $max_retries attempts"
-          exit 1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit and push
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update combined anime.json"
+          file_pattern: public/anime.json

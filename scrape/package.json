@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "puppeteer": "^24.2.0"
-  },
-  "scripts": {
-    "scrape": "node scrape/index.js"
-  }
-}
